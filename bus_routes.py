@@ -3,6 +3,47 @@ from collections import deque
 
 class Solution:
     def numBusesToDestination(self, routes, source, target):
+        stop_to_routes = {}
+        for i, route in enumerate(routes):
+            for stop in route:
+                if stop not in stop_to_routes:
+                    stop_to_routes[stop] = set()
+                stop_to_routes[stop].add(i)
+
+        def get_min_distance_bfs():
+            discovered_stops = set()
+            discovered_routes = set()
+            q = deque()
+            distances = {x: -1 for x in stop_to_routes.keys()}
+
+            discovered_stops.add(source)
+            q.append(source)
+            distances[source] = 0
+
+            while q:
+                work_node = q.popleft()
+
+                for route_i in stop_to_routes[work_node]:
+                    if route_i not in discovered_routes:
+                        for neigh in routes[route_i]:
+                            if neigh not in discovered_stops:
+                                q.append(neigh)
+                                discovered_stops.add(neigh)
+                                distances[neigh] = distances[work_node] + 1
+                        discovered_routes.add(route_i)
+
+            return distances
+
+        res = get_min_distance_bfs()
+        return res[target] if target in res else -1
+
+print(Solution().numBusesToDestination([[7,12],[4,5,15],[6],[15,19],[9,12,13]], 15, 12))
+
+
+
+'''
+class Solution2:
+    def numBusesToDestination(self, routes, source, target):
         graph = {}
         added = set()
 
@@ -46,3 +87,4 @@ class Solution:
         distance_from_source = get_min_distance_bfs()
 
         return distance_from_source[target] if distance_from_source[target] is not None else -1
+'''
