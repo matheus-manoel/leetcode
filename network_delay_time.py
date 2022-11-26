@@ -25,7 +25,7 @@ class Solution:
                     unvisiteds.remove(visiting)
 
                     for neigh, weight in graph[visiting]:
-                        if (neigh in unvisiteds 
+                        if (neigh in unvisiteds
                                 and distances[visiting] + weight < distances[neigh]):
                             new_dist = distances[visiting] + weight
                             distances[neigh] = new_dist
